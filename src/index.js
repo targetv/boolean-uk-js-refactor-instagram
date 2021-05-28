@@ -109,10 +109,9 @@ function createPostForm() {
       userId: getUserId.id,
       comments: [
         {
-          id: 1,
           content: "What a great photo!!",
           userId: 3,
-          postId: 1,
+          postId: 3,
         },
       ],
     };
@@ -124,9 +123,10 @@ function createPostForm() {
       body: JSON.stringify(newPost),
     }).then((response) => {
       if (response.ok) {
-        state.posts.push(newPost);
-        render();
+        setState({ posts: [...state.posts, newPost] });
         formEl.reset();
+      } else {
+        console.warn("Error sending data to server");
       }
     });
   });
@@ -207,6 +207,7 @@ function userPost(post) {
 }
 
 function getDataFromSever() {
+  render();
   fetch("http://localhost:3000/users")
     .then((response) => response.json())
     .then((userdata) => {
@@ -218,6 +219,11 @@ function getDataFromSever() {
           render();
         });
     });
+}
+
+function setState(setState) {
+  state = { ...state, ...setState };
+  render();
 }
 
 function render() {
